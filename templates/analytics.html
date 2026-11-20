@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Scan Analytics | MailSentinel{% endblock %}
+{% block heading %}Scan Analytics{% endblock %}
+
+{% block content %}
+<div class="page-intro">
+    <div>
+        <h2>Your email security at a glance</h2>
+        <p>Trends and risk levels from your saved investigations.</p>
+    </div>
+    <a class="secondary-action" href="{{ url_for('new_investigation') }}">＋ New scan</a>
+</div>
+
+<div class="stats-container analytics-stats">
+    <div class="stat-card">
+        <h3>Total scans</h3>
+        <h1>{{ total }}</h1>
+        <p>Saved investigations</p>
+    </div>
+    <div class="stat-card">
+        <h3>Average risk score</h3>
+        <h1>{{ average_score }}<span class="score-suffix">/100</span></h1>
+        <p>Across all your scans</p>
+    </div>
+    <div class="stat-card danger-card">
+        <h3>High-risk emails</h3>
+        <h1>{{ high_count }}</h1>
+        <p>Scores of 60 or higher</p>
+    </div>
+</div>
+
+<div class="analytics-grid">
+    <section class="dashboard-panel chart-panel">
+        <h2>Scanning activity</h2>
+        <p>Number of emails scanned per day over the last 7 days.</p>
+        {% if total %}
+            <div class="activity-chart" role="img" aria-label="Daily scan activity over the last seven days">
+                {% for day in daily_activity %}
+                    <div class="activity-row">
+                        <span class="activity-date">{{ day.label }}</span>
+                        <div class="activity-track">
+                            <span class="activity-bar" style="width: {{ day.width }}%"></span>
+                        </div>
+                        <strong class="activity-count">{{ day.count }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <span class="empty-state-icon" aria-hidden="true">⌁</span>
+                <strong>Your activity chart will appear here</strong>
+                <p>Run your first email scan to start seeing trends.</p>
+                <a href="{{ url_for('new_investigation') }}">Start an investigation →</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="dashboard-panel chart-panel">
+        <h2>Risk distribution</h2>
+        <p>Classification based on each scan's risk score.</p>
+        <div class="risk-list">
+            {% for band in risk_bands %}
+                <div class="risk-row">
+                    <span class="risk-dot {{ band.style }}" aria-hidden="true"></span>
+                    <span class="risk-label">{{ band.label }}</span>
+                    <strong>{{ band.count }}</strong>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="analytics-note">
+            Scores are heuristic indicators, not probabilities. A low score does not guarantee an email is safe.
+        </div>
+    </section>
+</div>
+
+<section class="dashboard-panel">
+    <h2>Recent scan results</h2>
+    <p>Your latest saved investigations and their risk scores.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Sender</th>
+                    <th>Subject</th>
+                    <th>Classification</th>
+                    <th>Risk score</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for scan in recent_scans %}
+                    <tr>
+                        <td>{{ scan[1] }}</td>
+                        <td>{{ scan[2] or 'Not provided' }}</td>
+                        <td>{{ scan[3] or 'No subject' }}</td>
+                        <td>{{ scan[4] }}</td>
+                        <td>{{ scan[5] }}/100</td>
+                        <td><a href="{{ url_for('scan_detail', scan_id=scan[0]) }}">View report</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">No investigations found yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

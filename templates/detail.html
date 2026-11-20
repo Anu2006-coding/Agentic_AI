@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block heading %}Investigation Details{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-panel">
+
+    <h2>Investigation #{{ scan[0] }}</h2>
+
+    <p>Date: {{ scan[1] }}</p>
+
+    <hr>
+
+    <h3>Email Information</h3>
+
+    <p><strong>Sender:</strong> {{ scan[2] or 'Not provided' }}</p>
+
+    <p><strong>Subject:</strong> {{ scan[3] or 'No subject' }}</p>
+
+    <h3>Threat Classification</h3>
+
+    <h2>{{ scan[4] }}</h2>
+
+    <h3>Risk Score</h3>
+
+    <h1>{{ scan[5] }}/100</h1>
+
+</div>
+
+<div class="dashboard-panel">
+
+    <h2>Investigation Findings</h2>
+
+    {% for finding in scan[6].split('\n') %}
+
+        <div class="finding-item">
+            {{ finding }}
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<div class="dashboard-panel">
+
+    <h2>Security Recommendations</h2>
+
+    {% for recommendation in scan[7].split('\n') %}
+
+        <div class="recommendation-item">
+            {{ recommendation }}
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<a href="{{ url_for('history') }}" class="back-link">
+    ← Back to History
+</a>
+
+{% endblock %}

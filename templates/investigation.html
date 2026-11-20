@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block heading %}New Email Investigation{% endblock %}
+
+{% block content %}
+<div class="dashboard-panel">
+    <h2>Submit an email to analyse</h2>
+    <p>Enter the email details or upload an .eml file to investigate potential phishing threats.</p>
+
+    <form action="{{ url_for('analyze') }}"
+          method="POST"
+          enctype="multipart/form-data">
+        <label for="sender">Sender Email</label>
+        <input id="sender" type="text" name="sender" placeholder="example@gmail.com">
+
+        <label for="subject">Email Subject</label>
+        <input id="subject" type="text" name="subject" placeholder="Enter email subject">
+
+        <label for="body">Email Message</label>
+        <textarea id="body" name="body" rows="8"
+                  placeholder="Paste suspicious email content here..."></textarea>
+
+        <label for="eml-file">Upload Email File (.eml)</label>
+        <input id="eml-file" type="file" name="eml_file" accept=".eml">
+
+        <button type="submit">Analyse Email →</button>
+    </form>
+</div>
+{% endblock %}

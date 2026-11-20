@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block heading %}Email Investigation Report{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-panel">
+
+    <h2>Investigation #{{ scan_id }}</h2>
+
+    <p>Detailed phishing threat analysis</p>
+
+    <hr>
+
+    <h3>Email Information</h3>
+
+    <p><strong>Sender:</strong> {{ sender or 'Not provided' }}</p>
+
+    <p><strong>Subject:</strong> {{ subject or 'No subject' }}</p>
+
+</div>
+
+
+<div class="stats-container">
+
+    <div class="stat-card">
+        <h3>Risk Score</h3>
+
+        <h1 class="danger-card">
+            {{ result.score }}/100
+        </h1>
+
+        <p>Calculated risk indicator score</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Threat Classification</h3>
+
+        <h1>{{ result.verdict }}</h1>
+
+        <p>Investigation result</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Detected URLs</h3>
+
+        <h1>{{ result.urls|length }}</h1>
+
+        <p>Links found in email</p>
+    </div>
+
+</div>
+
+
+<div class="dashboard-panel">
+
+    <h2>Threat Investigation Findings</h2>
+
+    <p>Indicators identified during email analysis.</p>
+
+    {% if result.findings %}
+
+        {% for finding in result.findings %}
+
+        <div class="finding-item">
+            ⚠ {{ finding }}
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No obvious indicators detected.</p>
+
+    {% endif %}
+
+</div>
+
+
+<div class="dashboard-panel">
+
+    <h2>Extracted URLs</h2>
+
+    {% if result.urls %}
+
+        {% for url in result.urls %}
+
+        <div class="url-box">
+            {{ url }}
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No URLs found in this email.</p>
+
+    {% endif %}
+
+    <p>URLs are displayed as text and are not opened automatically.</p>
+
+</div>
+
+
+<div class="dashboard-panel">
+
+    <h2>Security Recommendations</h2>
+
+    {% for recommendation in result.recommendations %}
+
+        <div class="recommendation-item">
+            ✓ {{ recommendation }}
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+<div class="dashboard-panel">
+
+    <h3>Investigation Disclaimer</h3>
+
+    <p>
+        This report is generated using the current
+        MailSentinel detection engine. The score is a
+        heuristic indicator, not a probability.
+        A low score does not guarantee that an email
+        is safe.
+    </p>
+
+</div>
+
+
+<a href="{{ url_for('index') }}" class="back-link">
+    ← Return to Dashboard
+</a>
+
+{% endblock %}

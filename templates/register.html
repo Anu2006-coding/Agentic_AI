@@ -1,0 +1,70 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Create account | MailSentinel{% endblock %}
+
+{% block page_class %}register-page{% endblock %}
+
+{% block content %}
+<div class="register-layout">
+    <section class="register-welcome" aria-labelledby="welcome-heading">
+        <span class="register-eyebrow">YOUR EMAIL SECURITY WORKSPACE</span>
+        <h1 id="welcome-heading">Make every email a little less uncertain.</h1>
+        <p class="register-description">
+            Create an account to investigate suspicious messages and keep your
+            results together in one place.
+        </p>
+
+        <ul class="register-benefits">
+            <li>
+                <span class="benefit-icon" aria-hidden="true">✓</span>
+                <span><strong>Investigate with confidence</strong><small>Review risk scores, findings, and practical recommendations.</small></span>
+            </li>
+            <li>
+                <span class="benefit-icon" aria-hidden="true">✓</span>
+                <span><strong>Keep your work organized</strong><small>Return to your investigation history whenever you need it.</small></span>
+            </li>
+            <li>
+                <span class="benefit-icon" aria-hidden="true">✓</span>
+                <span><strong>Your account, your workspace</strong><small>Your investigations are kept separate from other accounts.</small></span>
+            </li>
+        </ul>
+
+        <p class="register-security-note">
+            <span aria-hidden="true">◆</span>
+            Passwords are stored as secure hashes.
+        </p>
+    </section>
+
+    <section class="register-form-panel" aria-labelledby="create-account-heading">
+        <div class="register-step">STEP 1 <span>OF 2</span></div>
+        <h2 id="create-account-heading">Create your account</h2>
+        <p class="auth-intro">A few details and you’re ready to get started.</p>
+
+        <form action="{{ url_for('register') }}" method="POST">
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name"
+                   placeholder="e.g. Alex Morgan" required>
+
+            <label for="email">Work or personal email</label>
+            <input id="email" name="email" type="email" autocomplete="email"
+                   placeholder="you@example.com" required>
+            <small class="field-hint">We’ll use this email when you log in.</small>
+
+            <label for="password">Create a password</label>
+            <input id="password" name="password" type="password"
+                   minlength="8" autocomplete="new-password"
+                   placeholder="At least 8 characters" required>
+
+            <label for="confirm-password">Confirm password</label>
+            <input id="confirm-password" name="confirm_password" type="password"
+                   minlength="8" autocomplete="new-password"
+                   placeholder="Enter your password again" required>
+
+            <button type="submit">Create my account <span aria-hidden="true">→</span></button>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+        <p class="register-terms">By creating an account, you agree to use MailSentinel responsibly.</p>
+    </section>
+</div>
+{% endblock %}

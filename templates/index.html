@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block heading %}Security Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="stats-container">
+
+    <div class="stat-card">
+        <h3>Total Investigations</h3>
+        <h1>{{ total }}</h1>
+        <p>Emails analysed</p>
+    </div>
+
+    <div class="stat-card danger-card">
+        <h3>High Risk Emails</h3>
+        <h1>{{ high }}</h1>
+        <p>Require immediate review</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>System Status</h3>
+        <h1 class="active">ACTIVE</h1>
+        <p>Detection engine running</p>
+    </div>
+
+</div>
+
+
+<div class="dashboard-panel">
+
+    <h2>Recent Investigations</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Result</th>
+                <th>Risk Score</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for scan in scans %}
+
+            <tr>
+
+                <td>{{ scan[0] }}</td>
+
+                <td>{{ scan[1] }}</td>
+
+                <td>{{ scan[2] }}</td>
+
+                <td>{{ scan[3] }}</td>
+
+                <td>{{ scan[4] }}</td>
+
+                <td>{{ scan[5] }}/100</td>
+
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="6">
+                    No investigations available yet.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

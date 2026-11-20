@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block heading %}Investigation History{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-panel">
+
+    <h2>All Investigations</h2>
+    <p>Review previously analysed emails.</p>
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search sender, subject or result..."
+        onkeyup="searchTable()">
+
+    <table id="historyTable">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Classification</th>
+                <th>Risk Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for scan in scans %}
+
+            <tr>
+                <td>{{ scan[0] }}</td>
+                <td>{{ scan[1] }}</td>
+                <td>{{ scan[2] or 'Not provided' }}</td>
+                <td>{{ scan[3] or 'No subject' }}</td>
+                <td>{{ scan[4] }}</td>
+                <td>{{ scan[5] }}/100</td>
+                <td>
+                    <a href="{{ url_for('scan_detail', scan_id=scan[0]) }}">
+                        View Report
+                    </a>
+                </td>
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="7">No investigations found.</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+function searchTable() {
+
+    let input = document.getElementById("searchInput");
+    let filter = input.value.toLowerCase();
+
+    let table = document.getElementById("historyTable");
+    let rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+
+        let text = rows[i].innerText.toLowerCase();
+
+        rows[i].style.display =
+            text.includes(filter) ? "" : "none";
+    }
+}
+</script>
+
+{% endblock %}

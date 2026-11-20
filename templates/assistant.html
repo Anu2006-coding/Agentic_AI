@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}AI Assistant | MailSentinel{% endblock %}
+{% block heading %}AI Security Assistant{% endblock %}
+
+{% block content %}
+<div class="assistant-hero">
+    <div class="assistant-avatar" aria-hidden="true">✦</div>
+    <div>
+        <span class="assistant-status">MAILSENTINEL LOCAL ASSISTANT</span>
+        <h2>Let’s make sense of your scan.</h2>
+        <p>Ask a question about a saved investigation to get clear, practical guidance.</p>
+    </div>
+</div>
+
+<div class="assistant-grid">
+    <section class="dashboard-panel assistant-form-panel">
+        <h2>Ask about an investigation</h2>
+        {% if scans %}
+            <form action="{{ url_for('assistant') }}" method="POST">
+                <label for="scan-id">Choose a scan</label>
+                <select id="scan-id" name="scan_id" required>
+                    {% for scan in scans %}
+                        <option value="{{ scan[0] }}"
+                            {% if selected_id == scan[0] %}selected{% endif %}>
+                            #{{ scan[0] }} · {{ scan[3] or 'No subject' }} · {{ scan[4] }} ({{ scan[5] }}/100)
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label for="question">What would you like to know?</label>
+                <textarea id="question" name="question" rows="4" maxlength="500"
+                          placeholder="For example: Why was this email marked suspicious?"
+                          required>{{ question }}</textarea>
+                <div class="question-hint">Try asking about the risk score, findings, links, or attachments.</div>
+                <button type="submit">Get scan guidance <span aria-hidden="true">→</span></button>
+            </form>
+        {% else %}
+            <div class="empty-state assistant-empty">
+                <span class="empty-state-icon" aria-hidden="true">✦</span>
+                <strong>No scans to discuss yet</strong>
+                <p>Run an email investigation first, then come back with questions about its results.</p>
+                <a href="{{ url_for('new_investigation') }}">Start an investigation →</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <aside class="dashboard-panel assistant-tips">
+        <h2>Questions you can ask</h2>
+        <ul>
+            <li>What does this risk score mean?</li>
+            <li>Why was this email flagged?</li>
+            <li>Should I click a link in this email?</li>
+            <li>What should I do about an attachment?</li>
+        </ul>
+        <div class="assistant-privacy">
+            <strong>Your email stays here</strong>
+            <p>This assistant uses your saved scan findings and built-in guidance. Email content is not sent to an external AI service.</p>
+        </div>
+    </aside>
+</div>
+
+{% if answer %}
+    <section class="dashboard-panel assistant-answer" aria-live="polite">
+        <div class="answer-heading">
+            <span class="answer-icon" aria-hidden="true">✦</span>
+            <div>
+                <span class="assistant-status">SCAN #{{ answer.scan_id }}</span>
+                <h2>{{ answer.title }}</h2>
+            </div>
+        </div>
+        <p>{{ answer.explanation }}</p>
+
+        {% if answer.details %}
+            <h3>Relevant findings</h3>
+            <ul class="answer-list">
+                {% for detail in answer.details %}<li>{{ detail }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if answer.recommendations %}
+            <h3>Recommended next steps</h3>
+            <ul class="answer-list">
+                {% for recommendation in answer.recommendations %}<li>{{ recommendation }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+
+        <p class="assistant-disclaimer">
+            Guidance is based on MailSentinel’s rule-based scan, not a guarantee of safety. When in doubt, verify with the sender through a trusted channel.
+        </p>
+        <a class="back-link" href="{{ url_for('scan_detail', scan_id=answer.scan_id) }}">View full scan report →</a>
+    </section>
+{% endif %}
+{% endblock %}
